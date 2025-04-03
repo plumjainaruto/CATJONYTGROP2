@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walking Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body {
+            background: url('honme.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // ตั้งค่าขนาดของ canvas ให้เต็มหน้าจอ
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // โหลดรูปตัวละคร
+        const playerImg = new Image();
+        playerImg.src = 'nene.png'; // เปลี่ยนเป็นชื่อไฟล์รูปตัวละครของคุณ
+
+        // กำหนดค่าตัวละคร (เริ่มที่กลางจอ)
+        let player = {
+            x: canvas.width / 2 - 50,
+            y: canvas.height / 2 - 50,
+            width: 100,
+            height: 100,
+            speed: 5,
+        };
+
+        // เก็บสถานะปุ่มที่กด
+        let keys = {};
+
+        // ตรวจจับการกดปุ่ม
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // อัปเดตตำแหน่งตัวละคร
+        function update() {
+            if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
+            if (keys['ArrowDown'] && player.y + player.height < canvas.height) player.y += player.speed;
+            if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+            if (keys['ArrowRight'] && player.x + player.width < canvas.width) player.x += player.speed;
+
+            // เคลียร์หน้าจอ
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // วาดตัวละคร
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+        }
+
+        // รันเกม
+        function gameLoop() {
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // เริ่มเกมเมื่อรูปโหลดเสร็จ
+        playerImg.onload = () => {
+            gameLoop();
+        };
+    </script>
+
+    <a href="m.html" target="_blank" rel="noopener noreferrer">กด</a>
+</body>
+</html>
